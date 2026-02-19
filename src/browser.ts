@@ -10,7 +10,7 @@ import { writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import type { A2AServerConfig, A2AToolResult, PluginLogger } from "@wopr-network/plugin-types";
-import { type BrowserProfile, loadProfile, saveProfile } from "./browser-profile.js";
+import { loadProfile, saveProfile } from "./browser-profile.js";
 
 // ---------------------------------------------------------------------------
 // Configuration constants
@@ -443,9 +443,7 @@ export function buildBrowserA2ATools(log: PluginLogger, headless: boolean): A2AS
             }
             await persistProfile(instance, log);
             return {
-              content: [
-                { type: "text", text: `Typed into "${selector}"${pressEnter ? " and pressed Enter" : ""}` },
-              ],
+              content: [{ type: "text", text: `Typed into "${selector}"${pressEnter ? " and pressed Enter" : ""}` }],
             };
           } catch (err: unknown) {
             const message = err instanceof Error ? err.message : String(err);
@@ -457,8 +455,7 @@ export function buildBrowserA2ATools(log: PluginLogger, headless: boolean): A2AS
       // ----- browser_screenshot -----
       {
         name: "browser_screenshot",
-        description:
-          "Take a screenshot of the current page. Returns base64-encoded PNG data and saves to a temp file.",
+        description: "Take a screenshot of the current page. Returns base64-encoded PNG data and saves to a temp file.",
         inputSchema: {
           type: "object",
           properties: {

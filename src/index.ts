@@ -8,8 +8,8 @@
  */
 
 import type { WOPRPlugin, WOPRPluginContext } from "@wopr-network/plugin-types";
-import { initBrowserProfileStorage } from "./browser-profile.js";
 import { buildBrowserA2ATools, closeAllBrowsers } from "./browser.js";
+import { initBrowserProfileStorage } from "./browser-profile.js";
 
 export interface BrowserPluginConfig {
   headless?: boolean;
