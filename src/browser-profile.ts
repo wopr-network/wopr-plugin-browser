@@ -149,6 +149,13 @@ export async function saveProfile(profile: BrowserProfile): Promise<void> {
   await repo.update(profileRow.id, { updatedAt: Date.now() });
 }
 
+/**
+ * Reset storage reference (called during plugin shutdown).
+ */
+export function resetStorage(): void {
+  storage = null;
+}
+
 export async function listProfiles(): Promise<string[]> {
   const s = getStorage();
   const repo = s.getRepository<BrowserProfileRow>("browser", "profiles");
