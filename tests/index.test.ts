@@ -111,6 +111,46 @@ describe("wopr-plugin-browser", () => {
       expect(plugin.version).toBe("1.0.0");
     });
 
+    it("should have complete manifest fields", () => {
+      expect(plugin.name).toBe("wopr-plugin-browser");
+      expect(plugin.version).toBe("1.0.0");
+      expect(plugin.description).toBeTruthy();
+      const manifest = plugin.manifest!;
+      expect(manifest.category).toBe("utility");
+      expect(manifest.tags).toEqual(["browser", "automation", "playwright", "scraping"]);
+      expect(manifest.icon).toBe("globe");
+      expect(manifest.capabilities).toEqual(["browser-automation"]);
+    });
+
+    it("should declare configSchema", () => {
+      const schema = plugin.manifest?.configSchema;
+      expect(schema).toBeDefined();
+      expect(schema!.fields).toBeDefined();
+      const headless = schema!.fields.find((f) => f.name === "headless");
+      const timeout = schema!.fields.find((f) => f.name === "defaultTimeout");
+      expect(headless).toBeDefined();
+      expect(headless!.type).toBe("boolean");
+      expect(headless!.default).toBe(true);
+      expect(timeout).toBeDefined();
+      expect(timeout!.type).toBe("number");
+      expect(timeout!.default).toBe(30000);
+    });
+
+    it("should be safe to call shutdown() twice", async () => {
+      const ctx = mockCtx();
+      await plugin.init(ctx as any);
+      await plugin.shutdown();
+      await plugin.shutdown(); // second call must not throw
+    });
+
+    it("shutdown should clear storage reference", async () => {
+      const ctx = mockCtx();
+      await plugin.init(ctx as any);
+      await plugin.shutdown();
+      // After shutdown, calling loadProfile should throw "not initialized"
+      await expect(loadProfile("anything")).rejects.toThrow("not initialized");
+    });
+
     it("should init and register A2A server", async () => {
       const ctx = mockCtx();
       await plugin.init(ctx as any);
